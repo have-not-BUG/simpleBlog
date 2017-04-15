@@ -1,1 +1,1 @@
-# simpleBlog
+详见 [使用 Node.js 平台的express开发框架及mongodb搭建一个简单的博客](http://www.jianshu.com/p/f681de30a4b6#)
