@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title><%= title %></title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+</head>
+
+<body>
+
+<h3 class=""><%= name %></h3>
+<div class="blog-add">
+    <div class="blog-textarea">
+        <textarea name="" class="textarea-add" cols="30" rows="10"></textarea>
+    </div>
+    <p class="blog-action">
+        <a class="btn-update" href="javascript:;">更新</a>
+    </p>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    $(function() {
+
+        // 从url读取要更新的内容，简单粗暴处理
+        var oldContent = decodeURI(window.location.search.substr(12));
+
+        // 设置它到文本域，并保留换行
+        $('.textarea-add').val(oldContent.replace(/\<br\/>/g, '\n'));
+
+        // 更新
+        $('.btn-update').on('click', function(){
+            var updateContent=$('.textarea-add').val().trim().replace(/\n/g,'<br>');
+            if (updateContent===oldContent){
+                alert("没有内容更新");
+                return ;
+            }
+
+            var  postData={
+                'oldContent':oldContent,
+                'updateContent':updateContent
+            };
+            $.ajax({
+                type:'post',
+                url:'/',
+                data:postData,
+                success:function () {
+                    alert("更新成功");
+                    location.href='/';
+                },
+                error:function (err) {
+                    console.error(err);
+                    alert("更新失败");
+                    location.href='error';
+
+                }
+
+
+            })
+
+
+        })
+//        {
+//
+//
+//
+//            var updateContent = $('.textarea-add').val().trim().replace(/\n/g, '<br/>');
+//
+//            if (updateContent === oldContent) {
+//                alert('内容没有更新！');
+//                return;
+//            }
+//
+//            var postData = {
+//                'oldContent': oldContent,
+//                'updateContent': updateContent
+//            };
+//
+//            $.ajax({
+//                url: '/',
+//                type: 'post',
+//                data: postData,
+//                success: function(data){
+//                    alert('更新成功！');
+//                    location.href = '/';
+//                },
+//                error: function(data){
+//                    alert('更新失败！');
+//                    location.href = 'error';
+//                }
+//            });
+//        });
+
+    });
+</script>
+
+</body>
+
+</html>

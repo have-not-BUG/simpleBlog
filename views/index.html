@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title><%= title %></title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+</head>
+
+<body>
+
+<h3 class=""><%= name %></h3>
+<div class="blog-add">
+    <div class="blog-textarea">
+        <textarea name="" class="textarea-add" cols="30" rows="10"></textarea>
+    </div>
+    <p class="blog-action">
+        <a class="btn-publish" href="javascript:;">发布</a>
+    </p>
+</div>
+
+<div class="blog">
+    <ul class="blog-list">
+        <% for(var i=0; i
+        <content.length
+        ; i++) { %>
+        <li class="blog-item">
+            <p class="blog-content"><%- content[i].content %></p>
+            <p class="blog-extra">
+                <span class="date"><%= content[i].date %></span>
+                <a href="javascript:;" class="delete" data-content="<%= content[i].content %>">删除</a>
+                <a href="javascript:;" class="update" data-content="<%= content[i].content %>">更新</a>
+            </p>
+        </li>
+        <% } %>
+    </ul>
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    $(function () {
+
+        // 发布
+        $('.btn-publish').on('click', function () {
+            var blogContent = $('.textarea-add').val().trim().replace(/\n/g, '<br/>');
+
+            if (!blogContent) {
+                alert('内容不能为空!');
+                return;
+            }
+
+            var date = new Date(),
+                yy = date.getFullYear(),
+                MM = date.getMonth() + 1,
+                dd = date.getDate(),
+                hh = date.getHours(),
+                mm = date.getMinutes(),
+                ss = date.getSeconds();
+
+            var postData = {
+                'content': blogContent,
+                'date': yy + '-' + MM + '-' + dd + ' ' + hh + ':' + mm + ':' + ss
+            };
+
+            $.ajax({
+                url: '/',
+                type: 'post',
+                data: postData,
+                success: function (data) {
+                    alert('发布成功！');
+                    location.href = '/';
+                },
+                error: function (data) {
+                    alert('发布失败！');
+                    location.href = 'error';
+                }
+            });
+
+        });
+
+    });
+
+    // 删除
+    $('.delete').on('click', function () {
+        var deleteContent = $('.delete').attr('data-content');
+        var postData ={
+            'deleteContent':deleteContent
+        };
+        if (confirm("你确定要删除该条微型博客吗")){
+            $.ajax({
+                type: 'post',
+                url: '/',
+                data: postData,
+                success:function (data) {
+                    location.href='/'
+
+                },
+                error:function (data) {
+                    alert("删除失败，请重试！");
+                    location.href='/'
+
+                }
+
+            })
+
+        }
+
+
+    });
+    //    $('.delete').on('click', function() {
+    //        var deleteContent = $(this).attr('data-content');
+    //
+    //        var postData = {
+    //            'deleteContent': deleteContent
+    //        };
+    //
+    //        if (confirm('您确定要删除这条博客吗？')) {
+    //            $.ajax({
+    //                url: '/',
+    //                type: 'post',
+    //                data: postData,
+    //                success: function(data){
+    //                    // alert('成功！');
+    //                    location.href = '/';
+    //                },
+    //                error: function(data){
+    //                    // alert('失败！');
+    //                    location.href = 'error';
+    //                }
+    //            });
+    //        }
+    //    });
+    // 更新跳转
+
+
+    $('.update').on('click', function () {
+        var updateContent = $(this).attr('data-content');
+        location.href = '/update?updateBlog=' + updateContent;
+    });
+</script>
+
+</body>
+
+</html>
